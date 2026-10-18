@@ -3,6 +3,7 @@
 import "@/runtime/polyfills"
 import { init } from "@sentry/solid"
 import { render } from "solid-js/web"
+import { HashRouter } from "@solidjs/router"
 import { AppBaseProviders, AppInterface } from "@/app"
 import { loadInitialLocale } from "@/runtime/i18n/language"
 import { PlatformProvider } from "@/runtime/platform/platform"
@@ -51,7 +52,11 @@ const clearAuthToken = () => {
 
 const web = createWebPlatform(pkg.version)
 
-if (import.meta.env.PROD && "serviceWorker" in navigator) {
+// Static hosts that serve the app from a subpath (GitHub Pages) cannot rewrite deep links to index.html, so they
+// build with hash routing and without the service worker, which assumes the app lives at the site root.
+const hash = import.meta.env.VITE_OPENCODE_ROUTER === "hash"
+
+if (import.meta.env.PROD && !hash && "serviceWorker" in navigator) {
   window.addEventListener("load", () => void navigator.serviceWorker.register("/sw.js"), { once: true })
 }
 
@@ -103,6 +108,7 @@ if (root instanceof HTMLElement && root.dataset.opencodeMounted === undefined) {
             <AppInterface
               canonicalLocalServer={server ? ServerConnection.key(server) : undefined}
               servers={server ? [server] : []}
+              router={hash ? HashRouter : undefined}
             >
               <KeyboardInsets />
               {standalone && <PwaRoutePersistence />}

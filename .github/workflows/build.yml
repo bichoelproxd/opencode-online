@@ -40,12 +40,29 @@ jobs:
 
       - name: Build web app
         working-directory: packages/app
-        run: bun run build
+        env:
+          # GitHub Pages serves the app from /<repo>/ with no backend and no deep-link fallback.
+          VITE_OPENCODE_ROUTER: hash
+          VITE_OPENCODE_SERVER_MODE: none
+        run: bun run build --base=/${{ github.event.repository.name }}/
 
-      - name: Upload build output
-        uses: actions/upload-artifact@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: opencode-web
           path: packages/app/dist
-          if-no-files-found: error
-          retention-days: 14
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: web
+    if: github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
