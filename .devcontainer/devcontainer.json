@@ -1,0 +1,13 @@
+{
+  "name": "opencode server",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "forwardPorts": [4096],
+  "portsAttributes": {
+    "4096": {
+      "label": "opencode server",
+      "onAutoForward": "silent"
+    }
+  },
+  "postStartCommand": "bash .devcontainer/server.sh start",
+  "postAttachCommand": "bash .devcontainer/server.sh show"
+}

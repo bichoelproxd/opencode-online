@@ -44,6 +44,7 @@ jobs:
           # GitHub Pages serves the app from /<repo>/ with no backend and no deep-link fallback.
           VITE_OPENCODE_ROUTER: hash
           VITE_OPENCODE_SERVER_MODE: none
+          VITE_OPENCODE_CODESPACES_URL: https://codespaces.new/${{ github.repository }}?quickstart=1
         run: bun run build --base=/${{ github.event.repository.name }}/
 
       - name: Upload Pages artifact

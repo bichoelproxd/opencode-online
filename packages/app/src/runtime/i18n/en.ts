@@ -353,6 +353,8 @@ export const dict = {
   "dialog.server.add.namePlaceholder": "Localhost",
   "dialog.server.add.password": "Password",
   "dialog.server.add.passwordPlaceholder": "password",
+  "dialog.server.add.codespaces": "Create a server in GitHub Codespaces",
+  "dialog.server.add.codespaces.hint": "Opens a Codespace that starts a server. Copy its address and password here.",
 
   "server.connect.title": "Connect to a server",
   "server.connect.description": "Enter your server address and password to get started.",

@@ -39,6 +39,9 @@ const PairingScanner = lazy(() => import("./scanner").then((module) => ({ defaul
 
 type FormMode = "list" | "add" | "edit"
 
+// Set by static builds (GitHub Pages) that have no server of their own; offers a Codespace to create one.
+const codespacesUrl = import.meta.env.VITE_OPENCODE_CODESPACES_URL
+
 export const DialogServer: Component<{
   mode: "add" | "edit"
   server?: ServerConnection.Http
@@ -233,6 +236,20 @@ export const DialogServer: Component<{
                   {language.t("server.connect.scan")}
                 </Button>
               </Show>
+            </Show>
+            <Show when={props.mode === "add" && codespacesUrl}>
+              <div class="flex w-full min-w-0 flex-col gap-2">
+                <Button
+                  variant="neutral"
+                  size="large"
+                  class="!w-full self-stretch"
+                  disabled={form.state.busy()}
+                  onClick={() => window.open(codespacesUrl, "_blank", "noopener")}
+                >
+                  {language.t("dialog.server.add.codespaces")}
+                </Button>
+                <span class="settings-server-dialog-hint">{language.t("dialog.server.add.codespaces.hint")}</span>
+              </div>
             </Show>
             <ConnectMethodSwitch
               method={form.state.method()}
